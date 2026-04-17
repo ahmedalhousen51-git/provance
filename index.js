@@ -1,69 +1,48 @@
-// دالة اختيار نوع المستخدم
-function selectUserType(type) {
-    // أنيميشن النقر على البطاقة
-    const card = event.currentTarget;
-    card.style.transform = 'scale(0.95)';
-    
-    setTimeout(() => {
-        card.style.transform = '';
-        
-        // الانتقال إلى صفحة التسجيل المناسبة
-        if (type === 'student') {
-            window.location.href = 'student-register.html';
-        } else if (type === 'company') {
-            // توجيه الشركات إلى صفحة تسجيل الدخول أولاً
-            window.location.href = 'company-login.html';
-        }
-    }, 300);
-}
-
-// أنيميشن عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', function() {
-    // إضافة event listeners للبطاقات
-    const studentCard = document.querySelector('.student-card');
-    const companyCard = document.querySelector('.company-card');
     
-    if (studentCard) {
-        studentCard.addEventListener('click', function() {
-            selectUserType('student');
+    // 1. تشغيل زرار "ابدأ الآن" (الذي ينقلك لصفحة الاختيارات)
+    const mainStartBtn = document.getElementById('mainStartBtn');
+    const welcomePage = document.getElementById('welcomePage');
+    const selectionScreen = document.getElementById('selectionScreen');
+
+    if (mainStartBtn) {
+        mainStartBtn.addEventListener('click', function() {
+            // إخفاء صفحة الترحيب وإظهار صفحة الاختيارات
+            welcomePage.style.display = 'none';
+            selectionScreen.style.display = 'block';
+            selectionScreen.classList.add('active');
         });
     }
-    
-    if (companyCard) {
-        companyCard.addEventListener('click', function() {
-            selectUserType('company');
+
+    // 2. تشغيل زرار الرجوع
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            selectionScreen.style.display = 'none';
+            welcomePage.style.display = 'block';
         });
     }
-    
-    // إضافة تأثيرات تفاعلية إضافية
-    const cards = document.querySelectorAll('.choice-card');
-    
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px) scale(1.05)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
+
+    // 3. برمجة كروت المستخدمين (طالب / شركة / إداري)
+    const userCards = document.querySelectorAll('.user-card');
+    userCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const url = this.getAttribute('data-url');
+            if (url) {
+                // أنيميشن بسيط قبل الانتقال
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 200);
+            }
         });
     });
 });
 
-// تأثيرات إضافية للشعار
-const logo = document.querySelector('.logo');
-if (logo) {
-    setInterval(() => {
-        logo.style.textShadow = `
-            0 0 10px rgba(255, 215, 0, 0.7),
-            0 0 20px rgba(255, 215, 0, 0.5),
-            0 0 30px rgba(255, 215, 0, 0.3)
-        `;
-        
-        setTimeout(() => {
-            logo.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.5)';
-        }, 1000);
-    }, 3000);
-}
-
-// دالة احتياطية في حال لم تعمل الأحداث
-window.selectUserType = selectUserType;
+// دالة الاسكرول لزرار "اكتشف المزيد"
+window.scrollToAbout = function() {
+    const aboutSection = document.getElementById('aboutSection');
+    if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
+};
